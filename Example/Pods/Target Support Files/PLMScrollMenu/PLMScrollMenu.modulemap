@@ -1,0 +1,6 @@
+framework module PLMScrollMenu {
+  umbrella header "PLMScrollMenu-umbrella.h"
+
+  export *
+  module * { export * }
+}
