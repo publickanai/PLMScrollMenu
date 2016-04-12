@@ -32,22 +32,22 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         // vc data
         let vc1 = UIViewController()
         vc1.view.backgroundColor = UIColor(red: 0.4, green: 0.8, blue: 1, alpha: 1)
-        vc1.title = "１１１１１１"
+        vc1.title = "１１１１１"
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "1"
+        label.text = "１１１"
         label.sizeToFit()
         label.center = vc1.view.center
         vc1.view.addSubview(label)
         
         let vc2 = UIViewController()
         vc2.view.backgroundColor = UIColor(red: 1, green: 0.4, blue: 0.8, alpha: 1)
-        vc2.title = "２２２２"
+        vc2.title = "２２２２２"
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "2"
+        label.text = "２２２"
         label.sizeToFit()
         label.center = vc2.view.center
         vc2.view.addSubview(label)
@@ -58,7 +58,7 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "3"
+        label.text = "３３３"
         label.sizeToFit()
         label.center = vc3.view.center
         vc3.view.addSubview(label)
@@ -69,7 +69,7 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "4"
+        label.text = "４４４"
         label.sizeToFit()
         label.center = vc4.view.center
         vc4.view.addSubview(label)
@@ -80,18 +80,18 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "5"
+        label.text = "５５５"
         label.sizeToFit()
         label.center = vc5.view.center
         vc5.view.addSubview(label)
         
         let vc6 = UIViewController()
         vc6.view.backgroundColor = UIColor.purpleColor()
-        vc6.title = "６６６６６６"
+        vc6.title = "６６６６６"
         
         label = UILabel.init()
         label.textColor = UIColor.whiteColor()
-        label.text = "6"
+        label.text = "６６６"
         label.sizeToFit()
         label.center = vc6.view.center
         vc6.view.addSubview(label)

@@ -212,12 +212,12 @@ public class PLMScrollMenuInteractiveTransition : NSObject , UIViewControllerInt
     internal func finishInteractiveTransition()
     {        
         // Animation
-        _context.containerView()?.layer.speed = Float ( self.completionSpeed() )
-        let pausedTimeOffset : CFTimeInterval =  _context.containerView()!.layer.timeOffset
-        _context.containerView()!.layer.timeOffset = 0.0
-        _context.containerView()!.layer.beginTime = 0.0
-        let newBeginTime : CFTimeInterval = _context.containerView()!.layer.convertTime( CACurrentMediaTime() , fromLayer: nil) - pausedTimeOffset
-        _context.containerView()!.layer.beginTime = newBeginTime;
+        _context.containerView()?.layer.speed       = Float ( self.completionSpeed() )
+        let pausedTimeOffset : CFTimeInterval       = _context.containerView()!.layer.timeOffset
+        _context.containerView()!.layer.timeOffset  = 0.0
+        _context.containerView()!.layer.beginTime   = 0.0
+        let newBeginTime : CFTimeInterval           = _context.containerView()!.layer.convertTime( CACurrentMediaTime() , fromLayer: nil) - pausedTimeOffset
+        _context.containerView()!.layer.beginTime   = newBeginTime;
         
         // context transition
         _context.finishInteractiveTransition()
