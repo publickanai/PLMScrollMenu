@@ -163,8 +163,7 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         _viewControllers = viewControllers
         
         if let _ = menuBar , let _ = _viewControllers{
-            
-            self.updateMenuBarWithViewControllers(viewControllers!, animated:animated)
+            self.resetMenuBarWithViewControllers(viewControllers!, animated:animated)
         }
         
         if let viewControllers = _viewControllers where _viewControllers!.count > 0 {
@@ -214,12 +213,11 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         _transition = PLMScrollMenuTransition.init(menuViewController: self)
         self.transitionDelegate = _transition
         
-        // MenuBar & SelectedViewController
+        // set MenuBar & SelectedViewController
         if let viewControllers = _viewControllers where viewControllers.count > 0
         {
             // SetUpMenuBar
-            
-            self.updateMenuBarWithViewControllers(viewControllers, animated: false)
+            self.resetMenuBarWithViewControllers(viewControllers, animated: false)
             
             // Set selectedViewController -> transitionToViewController
             self.selectedViewController = viewControllers[selectedIndex] as? UIViewController
@@ -227,13 +225,11 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         
     }
     
-    /** Setup and Update MenuBarItems
+    /** Reset MenuBarItems
      */
-    private func updateMenuBarWithViewControllers( viewControllers:NSArray, animated:Bool )
+    private func resetMenuBarWithViewControllers( viewControllers:NSArray, animated:Bool )
     {
-        
-        // Setup
-        // Update menu bar items.
+        // Create Items
         let items :NSMutableArray = NSMutableArray()
         var item : PLMScrollMenuBarItem? = nil
         
@@ -257,6 +253,7 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         
         _items = NSArray(array: items)
         
+        // Set Items to MenuBar
         menuBar.setItems(_items!, animated: animated)
         
     }

@@ -75,7 +75,7 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         vc4.view.addSubview(label)
         
         let vc5 = UIViewController()
-        vc5.view.backgroundColor = UIColor.yellowColor()
+        vc5.view.backgroundColor = UIColor.greenColor()
         vc5.title = "５５５５５"
         
         label = UILabel.init()
@@ -96,6 +96,17 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         label.center = vc6.view.center
         vc6.view.addSubview(label)
         
+        let vc7 = UIViewController()
+        vc7.view.backgroundColor = UIColor.purpleColor()
+        vc7.title = "７７７７７"
+        
+        label = UILabel.init()
+        label.textColor = UIColor.whiteColor()
+        label.text = "７７７"
+        label.sizeToFit()
+        label.center = vc7.view.center
+        vc7.view.addSubview(label)
+        
         // vc datas
         self.vcArr = [vc1, vc2 , vc3, vc4 , vc5 , vc6]
         
@@ -111,7 +122,7 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         self.menuBar.setIndicatorColor(UIColor.magentaColor())
         
         // set delegate
-        //self.delegate = self
+        self.delegate = self
         
         // set ViewControllers
         self.viewControllers = vcArr

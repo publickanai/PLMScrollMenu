@@ -82,7 +82,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
      */
     private var _infinitePagingButtonWidth          : CGFloat?
     private var _infinitePagingOffsetX              : CGFloat?
-    private var _infinitePagingOrder                : NSMutableArray?
+    private var _infinitePagingArr                : NSMutableArray?
     private var _infinitePagingIsTappedItem         : Bool?
     private var _infinitePagingLastContentOffsetX   : CGFloat?
     
@@ -178,7 +178,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
     
     public func setSelectedItem(item : PLMScrollMenuBarItem ,animated:Bool)
     {
-        //print("\nMenuBar setSelectedItem:\(item.title) animated:\(animated) ")
+        print("\nMenuBar setSelectedItem:\(item.title) animated:\(animated)  -> setScrollOffset")
         
         // Abort
         if ( _selectedItem == item ) { return }
@@ -261,7 +261,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         var newPosition : CGPoint = CGPointZero
         
         //
-        // New Offset Position for ScrollView
+        // ScrollView's New Offset Position
         
         if _style == PLMScrollMenuBarStyle.Normal
         {
@@ -288,6 +288,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         } else if _style == PLMScrollMenuBarStyle.InfinitePaging
         {
+            
             // InfinitePaging
             
             let margin : CGFloat = (_infinitePagingButtonWidth! - _selectedItem!.width) * 0.5
@@ -297,7 +298,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         }
         
         //
-        //  New Offset Position for Indicator
+        //  Indicator's New Position
         
         if _indicatorView.frame.origin.x == 0.0 && _indicatorView.frame.size.width == 0.0
         {
@@ -480,6 +481,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             
         }
         
+        // Set ContentOffset
         _scrollView.setContentOffset(CGPointMake(from + _scrollView.contentSize.width/CGFloat(_items!.count) * ratio, 0), animated: false)
     }
     
@@ -514,9 +516,11 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         // Apply Style and Setup
         if( _style == PLMScrollMenuBarStyle.Normal ) {
+            
             self.setupMenuBarButtonsForNormalStyle(animated)
             
         } else if( _style == PLMScrollMenuBarStyle.InfinitePaging ) {
+            
             self.setupMenuBarButtonsForInfinitePagingStyle(animated)
         }
         
@@ -600,14 +604,13 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             _scrollView = nil
         }
         
-        // setup
+        // Setup
         _scrollView = PLMScrollMenuBarScrollView(frame: self.bounds )
         _scrollView.showsVerticalScrollIndicator = false
         _scrollView.showsHorizontalScrollIndicator = false
         _scrollView.contentOffset = CGPointZero
         _scrollView.scrollsToTop = false
         self.addSubview(_scrollView)
-        
         
         // Indicator
         _indicatorView = UIView(frame: CGRectMake(0, self.bounds.size.height - 4, 0, 4) )
@@ -679,7 +682,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         // Animate to Display Button Items
         if !animated {
-            //Without Animate
+            // Without Animate
             for v in _scrollView.subviews {
                 if v.isKindOfClass(PLMScrollMenuBarButton) {
                     v.alpha = 1.0
@@ -710,6 +713,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
     {
         //print("\nMenuBar Setup as InfinitePaging")
         
+        // ScrollView
         setupScrollView()
         
         var f :CGRect
@@ -718,7 +722,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         _scrollView.clipsToBounds = false
         _scrollView.delegate = self
         
-        // Get max width
+        // Max Width And Total Width
         var maxWidth : CGFloat      =   0.0
         var totalWidth : CGFloat    =   0.0
         
@@ -730,34 +734,38 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         //maxWidth = maxWidth + 0.5 // comment off this line
         
-        //print("MenuBar setup InfinitePaging maxWidth:\(maxWidth) totalWidth:\(totalWidth) _scrollView.bounds.size.width:\(_scrollView.bounds.size.width)")
-        
-        // Display normal style if can show all items
+        // Display Normal Style if can show all items
+        // Go to Normal Style
         if totalWidth < _scrollView.bounds.size.width
         {
-            //print("Can not infinite paging, because the number of items is too small")
+            // print("Can not infinite paging, because the number of items is too small")
             _style = PLMScrollMenuBarStyle.Normal
             self.setupMenuBarButtonsForNormalStyle(animated)
             return
         }
         
-        // Set up menu button
-        _infinitePagingOrder = NSMutableArray()
+        // Array for Infinite Paging Order
         
-        var offset:CGFloat  = itemInsets.left
-        let totalCount      = _items!.count
-        let halfCount       = totalCount/2
-        let evenFactor      = totalCount%2 > 0 ? 0 : 1
+        _infinitePagingArr              = NSMutableArray()
+        var offset:CGFloat              = itemInsets.left
+        let totalCount                  = _items!.count
+        let halfCount                   = totalCount/2
+        let evenFactor                  = totalCount%2 > 0 ? 0 : 1  // isEven Number
         
-        var firstItemOriginX : CGFloat = 0.0
+        var firstItemOriginX : CGFloat  = 0.0
         
         // _items[0] is on Center 
-        // totalCount:7 ex) -3 -2 -1 0 1 2 3
-        // totalCount:6 ex2) -2 -1 0 1 2 3
-        for( var i = -( halfCount - evenFactor); i <= halfCount ; i++ )
+        // ex)  totalCount:7 halfCount:3 eventFactor:0 -3 -2 -1 0 1 2 3
+        // ex2) totalCount:6 halfCount:3 eventFactor:1    -2 -1 0 1 2 3
+        
+        for( var i = -( halfCount - evenFactor) ; i <= halfCount ; i++ )
         {
-            // Convert Count Index to Real Index of Array
+            // Index of Array
+            
             let index = (totalCount + i) % totalCount
+            
+            // Add Button to ScrollView
+            
             let item : PLMScrollMenuBarItem = _items![index] as! PLMScrollMenuBarItem
             
             if let b : PLMScrollMenuBarButton = item.button()
@@ -765,81 +773,92 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
                 
                 let diffWidth = maxWidth - item.width
                 
-                f = CGRectMake(offset + diffWidth * 0.5,
-                    itemInsets.top,
-                    item.width,
+                f = CGRectMake( offset + diffWidth*0.5, itemInsets.top, item.width,
                     _scrollView.bounds.size.height - itemInsets.top + itemInsets.bottom)
-                offset += diffWidth*0.5 + f.size.width + diffWidth*0.5 + _itemInsets.right + _itemInsets.left
+                
                 b.frame = f
                 b.alpha = 0.0
+                
                 _scrollView.addSubview(b)
                 
                 b.addTarget(self, action: "didTapMenuButton:", forControlEvents: UIControlEvents.TouchUpInside)
                 
+                // Update ffset for Next Button
+                offset += diffWidth*0.5 + f.size.width + diffWidth*0.5 + _itemInsets.right + _itemInsets.left
+                
+                // ScrollView OffsetX for Center Item
                 if index == 0 {
-                    // OffsetX for Center Item
                     firstItemOriginX = f.origin.x - (itemInsets.left + diffWidth*0.5)
                 }
                 
-                _infinitePagingOrder?.addObject(NSValue(nonretainedObject: item))
+                // Add item to Array
+                _infinitePagingArr?.addObject(NSValue(nonretainedObject: item))
             }
             
         }
         
+        /** ScrollView's Frame
+        */
+        
         // BoundsWidth for a Menu Button
         _infinitePagingButtonWidth = itemInsets.left + maxWidth + itemInsets.right
         
-        // ScrollView size same as one button bounds 
+        // ScrollView Size Same As One Button Bounds
         // position is Center of Screen
-        _scrollView.frame = CGRectMake( (_scrollView.frame.size.width - _infinitePagingButtonWidth!) * 0.5, 0,_infinitePagingButtonWidth!, _scrollView.frame.size.height)
+        _scrollView.frame = CGRectMake( (_scrollView.frame.size.width - _infinitePagingButtonWidth!)*0.5 , 0 ,
+            _infinitePagingButtonWidth! , _scrollView.frame.size.height )
         
         let contentWidth : CGFloat = offset - itemInsets.left // remove _itemInsets.left of Next Item
         
         _scrollView.contentSize   = CGSizeMake( contentWidth , _scrollView.bounds.size.height )
         _scrollView.contentOffset = CGPointMake( firstItemOriginX , 0 )
         
-        // set value
+        // Set
         _infinitePagingOffsetX              = firstItemOriginX
         _infinitePagingLastContentOffsetX   = firstItemOriginX
         
-        // remove this line
-        //_scrollView.setNeedsLayout()
+        //_scrollView.setNeedsLayout() // comment off this line
         
         // Display Buttons
         if animated {
             
             // with Animate
-            for (var i = 0; i <= halfCount ; i++ ) {
-                
+            for (var i = 0 ; i <= halfCount ; i++ )
+            {
                 let index1 = (totalCount + i) % totalCount
                 let item1 : PLMScrollMenuBarItem = _items![index1] as! PLMScrollMenuBarItem
                 
-                if let view1 : PLMScrollMenuBarButton = item1.button() where view1.isKindOfClass(PLMScrollMenuBarButton) {
+                if let view1 : PLMScrollMenuBarButton = item1.button() where view1.isKindOfClass(PLMScrollMenuBarButton)
+                {
                     self.animateButton(view1, atIndex: i)
                 }
                 
                 let index2 : NSInteger = (totalCount-1) % totalCount
                 
-                if index1 == index2 {
-                    continue
+                if index1 == index2 { continue }
+                
+                // Animate Button
+                let item : PLMScrollMenuBarItem = items![index2] as! PLMScrollMenuBarItem
+                let itemBtn : PLMScrollMenuBarButton = item.button()
+                
+                if itemBtn.isKindOfClass(PLMScrollMenuBarButton)
+                {
+                    self.animateButton( itemBtn , atIndex:i )
                 }
                 
-                let item2 : PLMScrollMenuBarItem = items![index2] as! PLMScrollMenuBarItem
-                let view2 : PLMScrollMenuBarButton = item2.button()
-                
-                if view2.isKindOfClass(PLMScrollMenuBarButton) {
-                    self.animateButton(view2, atIndex: i)
-                }
             }
             
         } else {
             
             // Without Animate
-            for view in (_scrollView.subviews) {
-                if view.isKindOfClass(PLMScrollMenuBarButton) {
+            for view in (_scrollView.subviews)
+            {
+                if view.isKindOfClass(PLMScrollMenuBarButton)
+                {
                     view.alpha = 1.0;
                 }
             }
+            
         }
         
         // set SelectedItem
@@ -868,26 +887,26 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         if( diffX > 0 )
         {
             //add Item to Right
-            if (_infinitePagingOrder!.count > 0 )
+            if (_infinitePagingArr!.count > 0 )
             {
                 for(var i = 0 ; i < moveCount ; i++ )
                 {
-                    let firstObj = _infinitePagingOrder![0]
-                    _infinitePagingOrder!.addObject(firstObj)
-                    _infinitePagingOrder!.removeObjectAtIndex(0)
+                    let firstObj = _infinitePagingArr![0]
+                    _infinitePagingArr!.addObject(firstObj)
+                    _infinitePagingArr!.removeObjectAtIndex(0)
                 }
             }
         
         } else if (diffX < 0 ) {
             
             //add Item to Left
-            if (_infinitePagingOrder!.count > 0 )
+            if (_infinitePagingArr!.count > 0 )
             {
                 for(var i = 0 ; i < moveCount ; i++ )
                 {
-                    let lastObj = _infinitePagingOrder!.lastObject
-                    _infinitePagingOrder!.insertObject(lastObj!, atIndex: 0)
-                    _infinitePagingOrder!.removeObjectAtIndex( _infinitePagingOrder!.count - 1 )
+                    let lastObj = _infinitePagingArr!.lastObject
+                    _infinitePagingArr!.insertObject(lastObj!, atIndex: 0)
+                    _infinitePagingArr!.removeObjectAtIndex( _infinitePagingArr!.count - 1 )
                 }
             }
         }
@@ -896,7 +915,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         var index : NSInteger = 0
         var f : CGRect
         
-        for val in _infinitePagingOrder!
+        for val in _infinitePagingArr!
         {
             let item  = val.nonretainedObjectValue as! PLMScrollMenuBarItem
             f = item.button().frame
@@ -916,6 +935,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
     // MARK: - Animate with UIView and Button Index
     private func animateButton(view:UIView, atIndex index : NSInteger )
     {
+        // Scale and Alpha
         view.transform = CGAffineTransformMakeScale(1.4, 1.4)
         
         UIView.animateWithDuration(0.24,
@@ -927,17 +947,21 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             }) { (finished) -> Void in
                 
         }
+        
     }
     
     // MARK: -
     // MARK: - Button Tapped
+    
     internal func didTapMenuButton(sender:AnyObject)
     {
-        //print("MenuBar didTapMenuButton")
+        print("MenuBar didTapMenuButton -> SelectedItem")
         
         // Set SelectedItem
-        for item in _items! as! [PLMScrollMenuBarItem] {
-            if sender as! PLMScrollMenuBarButton == item.button() && item != _selectedItem {
+        for item in _items! as! [PLMScrollMenuBarItem]
+        {
+            if sender as! PLMScrollMenuBarButton == item.button() && item != _selectedItem
+            {
                 _infinitePagingIsTappedItem = true
                 self.selectedItem = item
                 break
@@ -969,7 +993,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             var index : NSInteger = 0;
             var selectedItem: PLMScrollMenuBarItem? = nil
             
-            for val in _infinitePagingOrder!
+            for val in _infinitePagingArr!
             {
                 let item = val.nonretainedObjectValue as! PLMScrollMenuBarItem
                 
