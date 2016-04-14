@@ -225,6 +225,58 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         
     }
     
+    /** MenuBar Button Title Color
+     */
+    private var _menuBarButtonColorNormal:UIColor      = PLMScrollMenuBar.kMenuBarButtonColorNormal
+    private var _menuBarButtonColorDisabled:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorDisabled
+    private var _menuBarButtonColorSelected:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorSelected
+    
+    public var menuBarButtonColorNormal:UIColor {
+        set{_menuBarButtonColorNormal = newValue
+            
+            // ApplyMenuButtonColors
+            if let items = _items {
+                for item : PLMScrollMenuBarItem in items as! [PLMScrollMenuBarItem] {
+                    item.buttonColorNormal   = _menuBarButtonColorNormal
+                }
+            }
+        }
+        get{return _menuBarButtonColorNormal}
+    }
+    
+    public var menuBarButtonColorDisabled:UIColor {
+        set{_menuBarButtonColorDisabled = newValue
+            
+            // ApplyMenuButtonColors
+            if let items = _items {
+                for item : PLMScrollMenuBarItem in items as! [PLMScrollMenuBarItem] {
+                    item.buttonColorDisabled = _menuBarButtonColorDisabled
+                }
+            }
+            
+        }
+        
+        get{
+            return _menuBarButtonColorDisabled
+        }
+    }
+    
+    public var menuBarButtonColorSelected:UIColor {
+        set{_menuBarButtonColorSelected = newValue
+            
+            // ApplyMenuButtonColors
+            if let items = _items {
+                for item : PLMScrollMenuBarItem in items as! [PLMScrollMenuBarItem] {
+                    item.buttonColorSelected = _menuBarButtonColorSelected
+                }
+            }
+            
+        }
+        get{
+            return _menuBarButtonColorSelected
+        }
+    }
+    
     /** Reset MenuBarItems
      */
     private func resetMenuBarWithViewControllers( viewControllers:NSArray, animated:Bool )
@@ -243,6 +295,11 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
                 
             } else {
                 item = PLMScrollMenuBarItem.item()
+                
+                item!.buttonColorNormal = _menuBarButtonColorNormal
+                item!.buttonColorDisabled = _menuBarButtonColorDisabled
+                item!.buttonColorSelected = _menuBarButtonColorSelected
+                
                 item!.title = vc.title!
                 item!.tag = i;
             }
@@ -425,7 +482,7 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         _selectedViewController = viewController
         _selectedIndex = _viewControllers!.indexOfObject(_selectedViewController!)
         
-        //Update menu bar
+        //Update menu bar selected Item
         let item : PLMScrollMenuBarItem = menuBar!.items![selectedIndex] as! PLMScrollMenuBarItem
         if let menuBar = menuBar  where item != menuBar.selectedItem {
             self.menuBar.selectedItem = item

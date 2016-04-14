@@ -81,11 +81,13 @@ public class PLMScrollMenuBarItem: NSObject
         get{ return _selected}
     }
     
+    
+    
     /** Button Title Color
      */
-    private var _buttonColorNormal:UIColor = UIColor(red: 0.647, green: 0.631, blue: 0.604, alpha: 1.000)
-    private var _buttonColorDisabled:UIColor = UIColor(white: 0.886 , alpha: 1.000)
-    private var _buttonColorSelected:UIColor = UIColor(red: 0.988, green: 0.224, blue: 0.129, alpha: 1.000)
+    private var _buttonColorNormal:UIColor      = PLMScrollMenuBar.kMenuBarButtonColorNormal
+    private var _buttonColorDisabled:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorDisabled
+    private var _buttonColorSelected:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorSelected
     
     public var buttonColorNormal:UIColor {
         set{_buttonColorNormal = newValue

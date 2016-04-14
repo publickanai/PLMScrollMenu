@@ -110,19 +110,25 @@ class ViewController: PLMScrollMenuViewController ,PLMScrollMenuViewControllerDe
         // vc datas
         self.vcArr = [vc1, vc2 , vc3, vc4 , vc5 , vc6]
         
-        self.menuBarY = 20
-        
         // set Style
         self.menuBar.style = PLMScrollMenuBarStyle.InfinitePaging
         
-        // set MenuBarInset
+        // Custon MenuBar PositionY
+        self.menuBarY = 20
+        
+        // Custom MenuBarInset
         self.menuItemInsets = UIEdgeInsetsMake(0, 30, 0, 30)
         
-        //
+        // Custom MenuBar Indicator
         self.menuBar.setIndicatorColor(UIColor.magentaColor())
         
-        // set delegate
-        self.delegate = self
+        // Custom MenuBar Button Color
+        self.menuBarButtonColorNormal   = UIColor.darkGrayColor()
+        self.menuBarButtonColorDisabled = UIColor.grayColor()
+        self.menuBarButtonColorSelected = UIColor.magentaColor()
+        
+        // set delegate if you need to use 'PLMScrollMenuViewControllerDelegate' Method
+        //self.delegate = self
         
         // set ViewControllers
         self.viewControllers = vcArr

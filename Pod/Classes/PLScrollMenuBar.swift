@@ -86,6 +86,15 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
     private var _infinitePagingIsTappedItem         : Bool?
     private var _infinitePagingLastContentOffsetX   : CGFloat?
     
+    /** MenuBar Button Color
+     */
+    internal static let kMenuBarButtonColorNormal : UIColor = UIColor(red: 0.647, green: 0.631, blue: 0.604, alpha: 1.000)
+    internal static let kMenuBarButtonColorDisabled : UIColor = UIColor(white: 0.886 , alpha: 1.000)
+    internal static let kMenuBarButtonColorSelected : UIColor = UIColor(red: 0.988, green: 0.224, blue: 0.129, alpha: 1.000)
+    
+    internal static let kMenuBarIndicatorColor : UIColor = UIColor(red: 0.988, green: 0.224, blue: 0.129, alpha: 1.000)
+    //UIColor(red: 0.988, green: 0.224, blue: 0.129, alpha: 1.000)
+    
     /** MenuBar Style
      */
     private var _style:PLMScrollMenuBarStyle = PLMScrollMenuBarStyle.Normal
@@ -577,8 +586,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         //
         _items  =   NSArray()
-        _barHeight = PLMScrollMenuBar.kPLMScrollMenuBarDefaultBarHeight;
-        _indicatorColor = UIColor(red: 0.988, green: 0.224, blue: 0.129, alpha: 1.000)
+        _barHeight = PLMScrollMenuBar.kPLMScrollMenuBarDefaultBarHeight
+        _indicatorColor = PLMScrollMenuBar.kMenuBarIndicatorColor
         
         // BG
         self.backgroundColor = UIColor.clearColor()
