@@ -1,6 +1,6 @@
 PODS:
   - Nimble (3.2.0)
-  - PLMScrollMenu (0.1.0)
+  - PLMScrollMenu (0.1.6)
   - Quick (0.9.1)
 
 DEPENDENCIES:
@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Nimble: 703854335d181df169bbca9c97117b5cf8c47c1d
-  PLMScrollMenu: 24965388986e2e0abf4bde1fca895bb895481c00
+  PLMScrollMenu: e6afece1416590c9bdef7afc7969aa750b56595a
   Quick: a5221fc21788b6aeda934805e68b061839bc3165
 
 COCOAPODS: 0.39.0.beta.4

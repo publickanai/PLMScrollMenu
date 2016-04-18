@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '2EA5D59A25D7FD64534CA8C5'
+               BlueprintIdentifier = '8CFD5EA5D418BF6D4403B65F'
                BlueprintName = 'PLMScrollMenu'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'PLMScrollMenu.framework'>
