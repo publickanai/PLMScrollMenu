@@ -8,6 +8,9 @@
 
 import UIKit
 
+// MARK: -
+// MARK: - BarButton
+
 public class PLMScrollMenuBarButton : UIButton
 {
     static func button()->PLMScrollMenuBarButton
@@ -15,6 +18,9 @@ public class PLMScrollMenuBarButton : UIButton
         return PLMScrollMenuBarButton.init(type: .Custom)
     }
 }
+
+// MARK: -
+// MARK: - BarItem
 
 public class PLMScrollMenuBarItem: NSObject
 {
@@ -31,8 +37,47 @@ public class PLMScrollMenuBarItem: NSObject
     public var selectedFont: UIFont?
     public var normalFont  : UIFont?
     
-    // Button
+    /** item
+     */
+    public  static func item() -> PLMScrollMenuBarItem {
+        return PLMScrollMenuBarItem.init()
+    }
+    
+    /** Button
+     */
     private var _itemButton : PLMScrollMenuBarButton!
+    
+    public func button() -> PLMScrollMenuBarButton {
+        
+        if let itemButton = _itemButton {
+            
+            return itemButton
+            
+        } else {
+            
+            _itemButton = PLMScrollMenuBarButton.init(type: .Custom)
+            
+            if let itemButton = _itemButton
+            {
+                itemButton.tag = self.tag
+                itemButton.frame = CGRectMake( 0 , 0 , _width , 24 )
+                
+                itemButton.titleLabel!.font = UIFont.systemFontOfSize( 16.0 )
+                itemButton.setTitle(self.title , forState: .Normal )
+                
+                itemButton.setTitleColor(buttonColorNormal, forState: .Normal)
+                itemButton.setTitleColor(buttonColorDisabled, forState: .Disabled)
+                itemButton.setTitleColor(buttonColorSelected, forState: .Selected)
+                
+                itemButton.enabled = enabled
+                itemButton.exclusiveTouch = false
+                itemButton.sizeToFit()
+            }
+            
+            return _itemButton
+        }
+        
+    }
     
     // Button Width
     private var _width: CGFloat!
@@ -81,14 +126,10 @@ public class PLMScrollMenuBarItem: NSObject
         get{ return _selected}
     }
     
-    
-    
     /** Button Title Color
      */
+    // Button Normal Color
     private var _buttonColorNormal:UIColor      = PLMScrollMenuBar.kMenuBarButtonColorNormal
-    private var _buttonColorDisabled:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorDisabled
-    private var _buttonColorSelected:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorSelected
-    
     public var buttonColorNormal:UIColor {
         set{_buttonColorNormal = newValue
             
@@ -99,6 +140,8 @@ public class PLMScrollMenuBarItem: NSObject
         get{return _buttonColorNormal}
     }
     
+    // Button Disabled Color
+    private var _buttonColorDisabled:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorDisabled
     public var buttonColorDisabled:UIColor {
         set{_buttonColorDisabled = newValue
             
@@ -112,6 +155,8 @@ public class PLMScrollMenuBarItem: NSObject
         }
     }
     
+    // Button Selected Color
+    private var _buttonColorSelected:UIColor    = PLMScrollMenuBar.kMenuBarButtonColorSelected
     public var buttonColorSelected:UIColor {
         set{_buttonColorSelected = newValue
             
@@ -136,43 +181,6 @@ public class PLMScrollMenuBarItem: NSObject
         _enabled = true
     }
     
-    // Item
-    public  static func item() -> PLMScrollMenuBarItem {
-        return PLMScrollMenuBarItem.init()
-    }
     
-    /** button
-     */
-    public func button() -> PLMScrollMenuBarButton {
-        
-        if let itemButton = _itemButton {
-            
-            return itemButton
-            
-        } else {
-            
-            _itemButton = PLMScrollMenuBarButton.init(type: .Custom)
-            
-            if let itemButton = _itemButton
-            {
-                itemButton.tag = self.tag
-                itemButton.frame = CGRectMake(0, 0, _width, 24)
-                
-                itemButton.titleLabel!.font = UIFont.systemFontOfSize(16.0)
-                itemButton.setTitle(self.title, forState: .Normal)
-                
-                itemButton.setTitleColor(buttonColorNormal, forState: .Normal)
-                itemButton.setTitleColor(buttonColorDisabled, forState: .Disabled)
-                itemButton.setTitleColor(buttonColorSelected, forState: .Selected)
-                
-                itemButton.enabled = enabled
-                itemButton.exclusiveTouch = false
-                itemButton.sizeToFit()
-            }
-            
-            return _itemButton
-        }
-        
-    }
     
 }

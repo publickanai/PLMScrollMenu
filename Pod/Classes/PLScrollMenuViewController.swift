@@ -31,7 +31,12 @@ public protocol PLMScrollMenuViewControllerDelegate {
 
 public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDelegate
 {
-    /** MenuBar Position
+    
+    /** MenuBar
+     */
+    public var menuBar:PLMScrollMenuBar!
+    
+    /** MenuBar Position X
      */
     private var _menuBarX:CGFloat = PLMScrollMenuBar.kPLMScrollMenuBarDefaultX
     
@@ -47,15 +52,31 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         get{ return _menuBarX }
     }
     
+    /** MenuBar Position Y
+     */
     private var _menuBarY:CGFloat = PLMScrollMenuBar.kPLMScrollMenuBarDefaultY
     public var menuBarY:CGFloat {
         set{ _menuBarY =  newValue
-            if let menuBar = menuBar {
+            
+            if let menuBar = menuBar
+            {
+                // update MenuBar Frame
                 var f :CGRect = menuBar.frame
                 f.origin.y = _menuBarY
                 menuBar.frame = f
+                
+                // update ContainerView Frame
+                if let containerView = containerView
+                {
+                    let menuBarBottom = CGRectGetMaxY(menuBar.frame)
+                    containerView.frame = CGRectMake( 0 , menuBarBottom , self.view.bounds.size.width , self.view.bounds.size.height - menuBarBottom)
+                }
+                
             }
+            
+            
         }
+        
         get{return _menuBarY}
     }
     
@@ -63,8 +84,10 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
      */
     private var _delegate: PLMScrollMenuViewControllerDelegate?
     public var delegate: PLMScrollMenuViewControllerDelegate? {
-        set{
-            if delegate as! NSObject? != newValue as! NSObject? {
+        set
+        {
+            if delegate as! NSObject? != newValue as! NSObject?
+            {
                 _delegate = newValue
                 // reset
                 _selectedViewController = nil
@@ -77,11 +100,7 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         }
     }
     
-    /** MenuBar
-     */
-    public var menuBar:PLMScrollMenuBar!
-    
-    /** MenuBar Item
+    /** MenuBar Item Inset
      */
     private var _menuItemInsets:UIEdgeInsets = UIEdgeInsetsZero
     public var menuItemInsets:UIEdgeInsets{
@@ -119,7 +138,7 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
      */
     private var _items:NSArray?
     
-    /** transition
+    /** Transition
      */
     private var _transition:PLMScrollMenuTransition?
     
@@ -162,67 +181,15 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         
         _viewControllers = viewControllers
         
-        if let _ = menuBar , let _ = _viewControllers{
+        // Reset MenuBar
+        if let _ = menuBar , let _ = _viewControllers {
             self.resetMenuBarWithViewControllers(viewControllers!, animated:animated)
         }
         
+        // Set selectedViewController
         if let viewControllers = _viewControllers where _viewControllers!.count > 0 {
             self.selectedViewController = viewControllers[_selectedIndex] as? UIViewController
         }
-    }
-    
-    // MARK: -
-    public override func loadView()
-    {
-        super.loadView()
-        
-        // remove Old
-        if let menuBar = menuBar {
-            menuBar.removeFromSuperview()
-        }
-        
-        if let containerView = containerView {
-            containerView.removeFromSuperview()
-        }
-        
-        var rect : CGRect
-        
-        rect = CGRectMake(menuBarX,menuBarY,self.view.bounds.size.width, PLMScrollMenuBar.kPLMScrollMenuBarDefaultBarHeight)
-        
-        // Setup MenuBar
-        menuBar = PLMScrollMenuBar(frame: rect)
-        menuBar.itemInsets = menuItemInsets
-        self.view.addSubview(menuBar)
-        menuBar.sizeToFit()
-        
-        rect = menuBar.frame
-        rect.origin.y = self.topLayoutGuide.length
-        menuBar.frame = rect
-        menuBar.delegate = self
-        menuBar.backgroundColor = self.view.backgroundColor
-        
-        // Setup ContainerView
-        let y = CGRectGetMaxY(menuBar.frame)
-        rect = CGRectMake(0, y, self.view.bounds.size.width, self.view.bounds.size.height - y)
-        containerView = UIView(frame: rect)
-        containerView.backgroundColor = UIColor(white: 0.8, alpha : 1.0)
-        self.view.addSubview(containerView)
-        self.view.insertSubview(self.containerView, belowSubview:self.menuBar)
-        
-        // Transition
-        _transition = PLMScrollMenuTransition.init(menuViewController: self)
-        self.transitionDelegate = _transition
-        
-        // set MenuBar & SelectedViewController
-        if let viewControllers = _viewControllers where viewControllers.count > 0
-        {
-            // SetUpMenuBar
-            self.resetMenuBarWithViewControllers(viewControllers, animated: false)
-            
-            // Set selectedViewController -> transitionToViewController
-            self.selectedViewController = viewControllers[selectedIndex] as? UIViewController
-        }
-        
     }
     
     /** MenuBar Button Title Color
@@ -245,36 +212,86 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
     }
     
     public var menuBarButtonColorDisabled:UIColor {
-        set{_menuBarButtonColorDisabled = newValue
-            
+        set{
+            _menuBarButtonColorDisabled = newValue
             // ApplyMenuButtonColors
             if let items = _items {
                 for item : PLMScrollMenuBarItem in items as! [PLMScrollMenuBarItem] {
                     item.buttonColorDisabled = _menuBarButtonColorDisabled
                 }
             }
-            
         }
-        
-        get{
-            return _menuBarButtonColorDisabled
-        }
+        get{ return _menuBarButtonColorDisabled }
     }
     
     public var menuBarButtonColorSelected:UIColor {
-        set{_menuBarButtonColorSelected = newValue
-            
+        set{
+            _menuBarButtonColorSelected = newValue
             // ApplyMenuButtonColors
             if let items = _items {
                 for item : PLMScrollMenuBarItem in items as! [PLMScrollMenuBarItem] {
                     item.buttonColorSelected = _menuBarButtonColorSelected
                 }
             }
-            
         }
         get{
             return _menuBarButtonColorSelected
         }
+    }
+    
+    /** UIViewController's  Life Cycle
+     */
+    
+    public override func loadView()
+    {
+        super.loadView()
+        
+        // remove Old
+        if let menuBar = menuBar {
+            menuBar.removeFromSuperview()
+        }
+        if let containerView = containerView {
+            containerView.removeFromSuperview()
+        }
+        
+        // MenuBar Frame
+        var rect : CGRect
+        rect = CGRectMake(menuBarX,menuBarY,self.view.bounds.size.width, PLMScrollMenuBar.kPLMScrollMenuBarDefaultBarHeight)
+        
+        // Setup MenuBar
+        menuBar = PLMScrollMenuBar(frame: rect)
+        menuBar.itemInsets = menuItemInsets
+        self.view.addSubview(menuBar)
+        menuBar.sizeToFit()
+        
+        rect = menuBar.frame
+        rect.origin.y = self.topLayoutGuide.length
+        menuBar.frame = rect
+        menuBar.delegate = self
+        menuBar.backgroundColor = self.view.backgroundColor
+        
+        // Setup ContainerView
+        let menuBarBottom = CGRectGetMaxY(menuBar.frame)
+        rect = CGRectMake( 0 , menuBarBottom , self.view.bounds.size.width , self.view.bounds.size.height - menuBarBottom)
+        containerView = UIView(frame: rect)
+        containerView.backgroundColor = UIColor(white: 0.8, alpha : 1.0)
+        self.view.addSubview(containerView)
+        self.view.insertSubview(self.containerView, belowSubview:self.menuBar)
+        
+        // Set Transition Delegate
+        _transition = PLMScrollMenuTransition.init( menuViewController : self )
+        self.transitionDelegate = _transition
+        
+        // set MenuBar & SelectedViewController
+        if let viewControllers = _viewControllers where viewControllers.count > 0
+        {
+            // Setup MenuBar
+            self.resetMenuBarWithViewControllers(viewControllers, animated: false)
+            
+            // Set selectedViewController -> transitionToViewController
+            self.selectedViewController = viewControllers[selectedIndex] as? UIViewController
+        }
+        
     }
     
     /** Reset MenuBarItems
@@ -319,10 +336,8 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
     */
     private func transitionToViewController(toViewController:UIViewController)
     {
-        
         // fromViewController
         let fromViewController:UIViewController? = selectedViewController
-        
         // Abort transition
         if toViewController == fromViewController || containerView == nil {
             return
@@ -507,8 +522,8 @@ public class PLMScrollMenuViewController: UIViewController, PLMScrollMenuBarDele
         
     }
     
-    // MARK: -
-    // MARK: - MenuBarController Delegate Method
+    /** MenuBarController Delegate Method
+     */
     
     public func menuBar(menuBar:PLMScrollMenuBar, didSelectItem:PLMScrollMenuBarItem , direction: PLMScrollMenuBarDirection )
     {        

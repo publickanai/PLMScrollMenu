@@ -231,8 +231,8 @@ public class PLMScrollMenuInteractiveTransition : NSObject , UIViewControllerInt
         
         let timeOffset : NSTimeInterval = _context.containerView()!.layer.timeOffset - _displayLink.duration * 0.3
         
-        if timeOffset < 0 {
-            
+        if timeOffset < 0
+        {
             _displayLink.invalidate()
             _displayLink = nil
             

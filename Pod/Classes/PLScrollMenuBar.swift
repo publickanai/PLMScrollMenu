@@ -8,11 +8,12 @@
 
 import UIKit
 
-
+// MARK: -
 // MARK: - ScrollView
+
 /** MenuBarScrollView
 */
-public class PLMScrollMenuBarScrollView:UIScrollView {
+public class PLMScrollMenuBarScrollView : UIScrollView {
     
     // Expansion of Touchable Area
     override public func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView?
@@ -33,6 +34,14 @@ public class PLMScrollMenuBarScrollView:UIScrollView {
     
 }
 
+// MARK: -
+// MARK: - MenuBar Protocol
+
+public protocol PLMScrollMenuBarDelegate {
+    func menuBar(menuBar:PLMScrollMenuBar, didSelectItem:PLMScrollMenuBarItem , direction: PLMScrollMenuBarDirection )
+}
+
+// MARK: -
 // MARK: - MenuBar
 
 /** MenuBar Style
@@ -50,13 +59,7 @@ public enum PLMScrollMenuBarDirection: Int {
     case Right
 }
 
-/** MenuBar Protocol
- */
-public protocol PLMScrollMenuBarDelegate {
-    func menuBar(menuBar:PLMScrollMenuBar, didSelectItem:PLMScrollMenuBarItem , direction: PLMScrollMenuBarDirection )
-}
-
-/** MenuBar
+/** PLMScroll MenuBar
  */
 public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
     
@@ -82,7 +85,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
      */
     private var _infinitePagingButtonWidth          : CGFloat?
     private var _infinitePagingOffsetX              : CGFloat?
-    private var _infinitePagingArr                : NSMutableArray?
+    private var _infinitePagingArr                  : NSMutableArray?
     private var _infinitePagingIsTappedItem         : Bool?
     private var _infinitePagingLastContentOffsetX   : CGFloat?
     
@@ -141,9 +144,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             }
         }
         
-        get {
-            return _itemInsets
-        }
+        get { return _itemInsets }
     }
     
     /** flags
@@ -386,7 +387,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
                         options: .CurveEaseOut,
                         animations: { [weak self]() -> Void in
                             
-                            if let weakSelf = self {
+                            if let weakSelf = self
+                            {
                                 
                                 // Content Offset with Animate
                                 var p : CGPoint = weakSelf._scrollView.contentOffset
@@ -397,8 +399,10 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
                                 
                                 // update Indicator Position before ReOrder
                                 // just case of Tapped
-                                if weakSelf._infinitePagingIsTappedItem == true {
-                                    if let oldItem = weakSelf._oldSelectedItem {
+                                if weakSelf._infinitePagingIsTappedItem == true
+                                {
+                                    if let oldItem = weakSelf._oldSelectedItem
+                                    {
                                         var f : CGRect = weakSelf._indicatorView.frame
                                         f.origin.x = oldItem.button().frame.origin.x - 3
                                         f.size.width = oldItem.button().frame.size.width + 6
@@ -424,9 +428,10 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
                                     options: .CurveEaseOut,
                                     animations: { [weak self]() -> Void in
                                         
-                                        if let weakSelf = self {
+                                        if let weakSelf = self
+                                        {
                                             
-                                            // update Indicator Position
+                                            // update Indicator Position After ReOrder
                                             var f : CGRect = weakSelf._indicatorView.frame
                                             f.origin.x = weakSelf._selectedItem!.button().frame.origin.x - 3
                                             f.size.width = weakSelf._selectedItem!.button().frame.size.width + 6
@@ -441,25 +446,20 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
                                             weakSelf.userInteractionEnabled = true
                                             
                                             // PLMScrollMenuBar Delegate Method
-                                            if let delegate = weakSelf.delegate {
+                                            if let delegate = weakSelf.delegate
+                                            {
                                                 delegate.menuBar(weakSelf, didSelectItem: weakSelf._selectedItem! , direction: direction)
                                             }
                                             
                                             weakSelf._infinitePagingIsTappedItem = false
                                             
                                         }
-                                    })
+                                    }) // completion
                                 
                             }
-                            
-                            
-                        })
-                    
+                        }) // completion
 
-            })
-
-            
-            
+            }) // dispatch_after
             
         }
         
@@ -476,7 +476,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
             let index = _items!.indexOfObject(_selectedItem!)
             let ignoreCount = NSInteger(_scrollView.frame.size.width*0.5/(_scrollView.contentSize.width/CGFloat(_items!.count)))
             
-            for(var i = 0; i < ignoreCount; i++) {
+            for(var i = 0; i < ignoreCount; i++)
+            {
                 if (index == i) {
                     return
                 } else if (index == _items!.count-1-i) {
@@ -542,8 +543,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - hitTest
+    /** hitTest
+     */
     override public func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView?
     {
         if(!self.userInteractionEnabled) { return nil }
@@ -558,8 +559,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         return view
     }
     
-    // MARK: -
-    // MARK: - init
+    /** init
+     */
     override init (frame : CGRect) {
         super.init(frame : frame)
         self.initialize()
@@ -617,10 +618,10 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         // Setup
         _scrollView = PLMScrollMenuBarScrollView(frame: self.bounds )
-        _scrollView.showsVerticalScrollIndicator = false
-        _scrollView.showsHorizontalScrollIndicator = false
-        _scrollView.contentOffset = CGPointZero
-        _scrollView.scrollsToTop = false
+        _scrollView.showsVerticalScrollIndicator    =   false
+        _scrollView.showsHorizontalScrollIndicator  =   false
+        _scrollView.contentOffset                   =   CGPointZero
+        _scrollView.scrollsToTop                    =   false
         self.addSubview(_scrollView)
         
         // Indicator
@@ -630,11 +631,10 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - Setup
+    /** Setup
+     */
     
-    /** NormalStyle
-    */
+    // Setup NormalStyle
     private func setupMenuBarButtonsForNormalStyle( animated:Bool )
     {
         //print("MenuBar Setup as Normal")
@@ -718,8 +718,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    /** InfinitePagingStyle
-     */
+    // Setup InfinitePagingStyle
+    
     private func setupMenuBarButtonsForInfinitePagingStyle( animated:Bool )
     {
         //print("\nMenuBar Setup as InfinitePaging")
@@ -885,8 +885,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - ReOrder infinite Paging Button's Order
+    /** ReOrder infinite Paging Button's Order
+     */
     
     private func reorderItems()
     {
@@ -897,7 +897,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         if( diffX > 0 )
         {
-            //add Item to Right
+            //add Item to Right of Array
             if (_infinitePagingArr!.count > 0 )
             {
                 for(var i = 0 ; i < moveCount ; i++ )
@@ -910,7 +910,7 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
         } else if (diffX < 0 ) {
             
-            //add Item to Left
+            //add Item to Left of Array
             if (_infinitePagingArr!.count > 0 )
             {
                 for(var i = 0 ; i < moveCount ; i++ )
@@ -942,8 +942,9 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - Animate with UIView and Button Index
+    /** Animate with UIView and Button Index
+     */
+    
     private func animateButton(view:UIView, atIndex index : NSInteger )
     {
         // Scale and Alpha
@@ -961,8 +962,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - Button Tapped
+    /** Button Tapped
+     */
     
     internal func didTapMenuButton(sender:AnyObject)
     {
@@ -982,8 +983,8 @@ public class PLMScrollMenuBar: UIView , UIScrollViewDelegate {
         
     }
     
-    // MARK: -
-    // MARK: - UIScrollView Delegate Method For InfinitePaging
+    /** UIScrollView Delegate Method For InfinitePaging
+     */
     
     @objc public func scrollViewDidEndDecelerating( scrollView: UIScrollView )
     {
