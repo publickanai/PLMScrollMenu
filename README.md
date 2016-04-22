@@ -9,7 +9,6 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-
 ![](https://github.com/publickanai/PLMScrollMenu/blob/master/ReadmeImages/capture.gif)
 
 Import PLMScrollMenu module.
