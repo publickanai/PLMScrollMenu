@@ -13,20 +13,20 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 Import PLMScrollMenu module.
 
-```
+```swift
 import PLMScrollMenu
 ```
 
 
 Define your view controller class with PLMScrollMenuViewController.
 
-```
+```swift
 class YourViewController: PLMScrollMenuViewController {
 ```
 
 Set ViewControllers.
 
-```
+```swift
 override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
@@ -60,6 +60,31 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "PLMScrollMenu"
 ```
+
+### CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod "PLMScrollMenu"
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+
 
 ## Author
 
